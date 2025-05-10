@@ -39,3 +39,17 @@ button:disabled {
   background-color: #888;
   cursor: not-allowed;
 }
+
+.solfeggio-buttons {
+  margin-bottom: 1em;
+}
+
+.freq-btn {
+  margin: 0.2em;
+  padding: 0.5em 1em;
+  background-color: #2196f3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
