@@ -55,3 +55,10 @@ document.querySelectorAll('.freq-btn').forEach(button => {
     baseFreqInput.value = freq;
   });
 });
+
+document.querySelectorAll('.beat-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const beat = button.getAttribute('data-beat');
+    document.getElementById("beat-frequency").value = beat;
+  });
+});
