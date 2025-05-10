@@ -9,7 +9,21 @@
 <body>
   <div class="container">
     <h1>Binaural Beats Generator</h1>
-    <label for="base-frequency">Base Frequency (Hz):</label>
+
+    <div class="solfeggio-buttons">
+      <p>Select Base Frequency (Solfeggio):</p>
+      <button class="freq-btn" data-freq="174">174 Hz - Pain Relief</button>
+<button class="freq-btn" data-freq="285">285 Hz - Healing Tissue</button>
+<button class="freq-btn" data-freq="396">396 Hz - Liberating Guilt</button>
+<button class="freq-btn" data-freq="417">417 Hz - Undoing Situations</button>
+<button class="freq-btn" data-freq="528">528 Hz - Transformation & Miracles</button>
+<button class="freq-btn" data-freq="639">639 Hz - Connecting Relationships</button>
+<button class="freq-btn" data-freq="741">741 Hz - Awakening Intuition</button>
+<button class="freq-btn" data-freq="852">852 Hz - Returning to Spiritual Order</button>
+<button class="freq-btn" data-freq="963">963 Hz - Divine Consciousness</button>
+    </div>
+
+    <label for="base-frequency">Or Enter Base Frequency (Hz):</label>
     <input type="number" id="base-frequency" value="200" min="20" max="1000" />
 
     <label for="beat-frequency">Beat Frequency (Hz):</label>
