@@ -99,7 +99,7 @@ document.querySelectorAll('.beat-btn').forEach(button => {
 
 let noiseSource;
 let noiseGain = null;
-const noiseButtons = ['white', 'pink', 'brown'];
+let selectedNoiseType = null;
 
 function createNoiseBuffer(type, context) {
   const bufferSize = 2 * context.sampleRate;
@@ -111,8 +111,7 @@ function createNoiseBuffer(type, context) {
       output[i] = Math.random() * 2 - 1;
     }
   } else if (type === 'pink') {
-    let b0, b1, b2, b3, b4, b5, b6;
-    b0 = b1 = b2 = b3 = b4 = b5 = b6 = 0.0;
+    let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0, b6 = 0;
     for (let i = 0; i < bufferSize; i++) {
       const white = Math.random() * 2 - 1;
       b0 = 0.99886 * b0 + white * 0.0555179;
@@ -133,6 +132,19 @@ function createNoiseBuffer(type, context) {
       lastOut = output[i];
       output[i] *= 3.5;
     }
+  } else if (type === 'blue') {
+    for (let i = 0; i < bufferSize; i++) {
+      output[i] = (Math.random() * 2 - 1) * (i / bufferSize);
+    }
+  } else if (type === 'violet') {
+    for (let i = 1; i < bufferSize; i++) {
+      output[i] = (Math.random() * 2 - 1) * Math.pow(i / bufferSize, 2);
+    }
+  } else if (type === 'grey') {
+    for (let i = 0; i < bufferSize; i++) {
+      const white = Math.random() * 2 - 1;
+      output[i] = white * Math.sqrt(i / bufferSize);
+    }
   }
 
   return buffer;
@@ -144,7 +156,10 @@ function startNoise(type) {
   const buffer = createNoiseBuffer(type, audioCtx);
   noiseSource = audioCtx.createBufferSource();
   noiseGain = audioCtx.createGain();
-  noiseGain.gain.setValueAtTime(document.getElementById("mixer").value, audioCtx.currentTime);
+
+  const mixerValue = document.getElementById("mixer").value;
+  noiseGain.gain.setValueAtTime(mixerValue, audioCtx.currentTime);
+
   noiseSource.buffer = buffer;
   noiseSource.loop = true;
 
@@ -153,27 +168,34 @@ function startNoise(type) {
 }
 
 function stopNoise() {
-  if (noiseSource) {
-    noiseSource.stop();
-    noiseSource.disconnect();
-    noiseSource = null;
-  }
-  if (noiseGain) {
-    noiseGain.disconnect();
-    noiseGain = null;
+  if (audioCtx && noiseGain) {
+    if (noiseSource) {
+      noiseSource.stop();
+      noiseSource.disconnect();
+      noiseGain.disconnect();
+      noiseSource = null;
+      noiseGain = null;
+    }
   }
 }
 
 document.querySelectorAll('.noise-btn').forEach(button => {
   button.addEventListener('click', () => {
+    selectedNoiseType = button.getAttribute('data-noise');
     stopNoise();
-    const type = button.getAttribute('data-noise');
-    startNoise(type);
+    startNoise(selectedNoiseType);
   });
 });
 
 document.getElementById("mixer").addEventListener("input", (e) => {
   if (noiseGain) {
     noiseGain.gain.setValueAtTime(e.target.value, audioCtx.currentTime);
+  }
+});
+
+const originalStartClick = startButton.onclick;
+startButton.addEventListener("click", () => {
+  if (selectedNoiseType) {
+    startNoise(selectedNoiseType);
   }
 });
