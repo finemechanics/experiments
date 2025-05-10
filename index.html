@@ -26,7 +26,15 @@
     <label for="base-frequency">Or Enter Base Frequency (Hz):</label>
     <input type="number" id="base-frequency" value="200" min="20" max="1000" />
 
-    <label for="beat-frequency">Beat Frequency (Hz):</label>
+    <div class="beat-buttons">
+      <p>Select Beat Frequency (Brainwave State):</p>
+      <button class="beat-btn" data-beat="1.5">Delta (0.5–4 Hz)</button>
+<button class="beat-btn" data-beat="5.5">Theta (4–8 Hz)</button>
+<button class="beat-btn" data-beat="10">Alpha (8–12 Hz)</button>
+<button class="beat-btn" data-beat="18">Beta (12–30 Hz)</button>
+<button class="beat-btn" data-beat="40">Gamma (30–100 Hz)</button>
+    </div>
+    <label for="beat-frequency">Or Enter Beat Frequency (Hz):</label>
     <input type="number" id="beat-frequency" value="10" min="0.1" max="40" step="0.1" />
 
     <button id="start-button">Start</button>
