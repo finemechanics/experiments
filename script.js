@@ -14,8 +14,8 @@ function updateFrequencies() {
   const beatFreq = parseFloat(beatFreqInput.value);
 
   if (oscillatorL && oscillatorR) {
-    oscillatorL.frequency.setValueAtTime(baseFreq, audioCtx.currentTime);
-    oscillatorR.frequency.setValueAtTime(baseFreq + beatFreq, audioCtx.currentTime);
+    oscillatorL.frequency.setTargetAtTime(baseFreq, audioCtx.currentTime, 0.01);
+    oscillatorR.frequency.setTargetAtTime(baseFreq + beatFreq, audioCtx.currentTime, 0.01);
   }
 }
 
@@ -30,6 +30,14 @@ startButton.addEventListener("click", () => {
 
   gainNodeL = audioCtx.createGain();
   gainNodeR = audioCtx.createGain();
+
+  // Start gain at 0
+  gainNodeL.gain.setValueAtTime(0, audioCtx.currentTime);
+  gainNodeR.gain.setValueAtTime(0, audioCtx.currentTime);
+
+  // Fade in smoothly
+  gainNodeL.gain.exponentialRampToValueAtTime(1.0, audioCtx.currentTime + 0.5);
+  gainNodeR.gain.exponentialRampToValueAtTime(1.0, audioCtx.currentTime + 0.5);
 
   const splitter = audioCtx.createChannelMerger(2);
 
@@ -52,15 +60,23 @@ startButton.addEventListener("click", () => {
 });
 
 stopButton.addEventListener("click", () => {
-  if (oscillatorL) oscillatorL.stop();
-  if (oscillatorR) oscillatorR.stop();
-  if (audioCtx) audioCtx.close();
+  if (audioCtx && gainNodeL && gainNodeR) {
+    // Fade out before stopping
+    const stopTime = audioCtx.currentTime + 0.5;
+    gainNodeL.gain.exponentialRampToValueAtTime(0.001, stopTime);
+    gainNodeR.gain.exponentialRampToValueAtTime(0.001, stopTime);
 
-  startButton.disabled = false;
-  stopButton.disabled = true;
+    oscillatorL.stop(stopTime);
+    oscillatorR.stop(stopTime);
+
+    setTimeout(() => {
+      audioCtx.close();
+      startButton.disabled = false;
+      stopButton.disabled = true;
+    }, 600);
+  }
 });
 
-// Update frequency when value changes
 baseFreqInput.addEventListener("input", updateFrequencies);
 beatFreqInput.addEventListener("input", updateFrequencies);
 
