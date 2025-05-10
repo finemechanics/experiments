@@ -6,14 +6,14 @@ let gainNodeR;
 
 const startButton = document.getElementById("start-button");
 const stopButton = document.getElementById("stop-button");
+const baseFreqInput = document.getElementById("base-frequency");
 
 startButton.addEventListener("click", () => {
-  const baseFreq = parseFloat(document.getElementById("base-frequency").value);
+  const baseFreq = parseFloat(baseFreqInput.value);
   const beatFreq = parseFloat(document.getElementById("beat-frequency").value);
 
   audioCtx = new (window.AudioContext || window.webkitAudioContext)();
 
-  // Create oscillators for left and right ears
   oscillatorL = audioCtx.createOscillator();
   oscillatorR = audioCtx.createOscillator();
 
@@ -28,8 +28,8 @@ startButton.addEventListener("click", () => {
   oscillatorL.connect(gainNodeL);
   oscillatorR.connect(gainNodeR);
 
-  gainNodeL.connect(splitter, 0, 0); // Left
-  gainNodeR.connect(splitter, 0, 1); // Right
+  gainNodeL.connect(splitter, 0, 0);
+  gainNodeR.connect(splitter, 0, 1);
 
   splitter.connect(audioCtx.destination);
 
@@ -47,4 +47,11 @@ stopButton.addEventListener("click", () => {
 
   startButton.disabled = false;
   stopButton.disabled = true;
+});
+
+document.querySelectorAll('.freq-btn').forEach(button => {
+  button.addEventListener('click', () => {
+    const freq = button.getAttribute('data-freq');
+    baseFreqInput.value = freq;
+  });
 });
